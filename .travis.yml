@@ -1,0 +1,23 @@
+language: generic 
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t koreissm/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true koreissm/react-test npm test
+
+after_success:
+  - docker build -t koreissm/multi-client ./client
+  - docker build -t koreissm/multi-nginx ./nginx
+  - docker build -t koreissm/multi-server ./server
+  - docker build -t koreissm/multi-worker ./worker
+  #Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" -- password-stdin
+  #Take those images and push them into the docker hub
+  - docker push koreissm/multi-client
+  - docker push koreissm/multi-nginx
+  - docker push koreissm/multi-server
+  - docker push koreissm/multi-worker
