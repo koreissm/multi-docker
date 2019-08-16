@@ -15,7 +15,7 @@ after_success:
   - docker build -t koreissm/multi-server ./server
   - docker build -t koreissm/multi-worker ./worker
   #Log in to the docker CLI
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" -- password-stdin
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   #Take those images and push them into the docker hub
   - docker push koreissm/multi-client
   - docker push koreissm/multi-nginx
